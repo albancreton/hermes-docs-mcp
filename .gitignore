@@ -1,0 +1,16 @@
+# Models (downloaded on first run)
+models/
+
+# Docs (synced from GitHub on first run)
+docs/
+
+# Database (built from docs on first run)
+docs_rag.db
+
+# Node
+node_modules/
+dist/
+
+# OS
+.DS_Store
+.pi
