@@ -13,7 +13,21 @@ Two MCP tools are exposed to connected AI agents:
 | `search_docs` | Semantic search across all docs. Returns ranked chunks with similarity scores, file paths, and content. |
 | `get_document` | Retrieves the full content of a specific doc file by path (e.g. `user-guide/security.md`). |
 
-## Quick start
+## Install
+
+### Via npm (recommended)
+
+```bash
+npm install -g @patate/hermes-docs-mcp
+```
+
+Or run directly with `npx`:
+
+```bash
+npx @patate/hermes-docs-mcp
+```
+
+### From source
 
 ```bash
 git clone <repo> && cd hermes-doc
@@ -30,6 +44,21 @@ The `setup` step does three things:
 ## MCP installation
 
 Add the server to your MCP client config (e.g. `~/.config/<client>/mcp.json` or your project's `.mcp.json`):
+
+### From npm
+
+```json
+{
+  "mcpServers": {
+    "hermes-docs": {
+      "command": "npx",
+      "args": ["-y", "@patate/hermes-docs-mcp"]
+    }
+  }
+}
+```
+
+### From source
 
 ```json
 {
@@ -49,7 +78,7 @@ That's it — the MCP server auto-boots on first connection: if the model, docs,
 
 ## CLI tools
 
-Besides the MCP server, standalone CLI tools are available:
+Besides the MCP server, standalone CLI tools are available (from source):
 
 | Command | Description |
 |---|---|
@@ -58,21 +87,14 @@ Besides the MCP server, standalone CLI tools are available:
 | `pnpm run sync-docs` | Refresh docs from GitHub |
 | `pnpm run build:db` | Rebuild embeddings (e.g. after doc refresh) |
 
-## Project structure
+## Publishing
 
-```
-rag_model.ts          Shared module: model download, loading, cosine similarity
-sync_docs.ts          Downloads docs/ from GitHub (no git clone)
-build_rag_db.ts       Chunks docs, generates embeddings, writes SQLite
-query_rag_db.ts       CLI semantic search
-mcp_server.ts         MCP server (auto-boots setup if needed)
-docs/                 Synced docs (gitignored)
-models/               Downloaded embedding model (gitignored)
-docs_rag.db           SQLite RAG database (gitignored)
+```bash
+npm login
+npm publish --access public
 ```
 
 ## Requirements
 
 - Node.js 20+
-- pnpm
 - Xcode Command Line Tools (for native dependencies: `better-sqlite3`, `node-llama-cpp`)

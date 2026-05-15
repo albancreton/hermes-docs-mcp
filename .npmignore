@@ -1,0 +1,14 @@
+# Generated / runtime
+docs/
+models/
+docs_rag.db
+node_modules/
+dist/
+.tmp-download/
+
+# Dev
+.test/
+.env*
+.git*
+.pi/
+.mcp.json

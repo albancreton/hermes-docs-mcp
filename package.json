@@ -1,8 +1,16 @@
 {
   "name": "@patate/hermes-docs-mcp",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "MCP server to search and read NousResearch's Hermes Agent documentation",
   "type": "module",
+  "bin": {
+    "hermes-docs-mcp": "./bin/mcp.js"
+  },
+  "files": [
+    "bin/",
+    "*.ts",
+    "tsconfig.json"
+  ],
   "scripts": {
     "setup": "tsx sync_docs.ts && tsx build_rag_db.ts",
     "build:db": "tsx build_rag_db.ts",
@@ -10,19 +18,30 @@
     "mcp": "tsx mcp_server.ts",
     "sync-docs": "tsx sync_docs.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "hermes-agent",
+    "semantic-search",
+    "rag",
+    "docs"
+  ],
+  "author": "Patate",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/patate/hermes-docs-mcp"
+  },
   "packageManager": "pnpm@10.33.4",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "better-sqlite3": "^12.10.0",
     "node-llama-cpp": "^3.18.1",
+    "tsx": "^4.22.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
-    "tsx": "^4.22.0",
     "typescript": "^6.0.3"
   }
 }
