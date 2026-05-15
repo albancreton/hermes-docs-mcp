@@ -67,7 +67,7 @@ async function downloadAndExtractDocs(): Promise<void> {
 
   // Extract only the docs subfolder
   fs.mkdirSync(path.join(TMP_DIR, "extracted"), { recursive: true });
-  execSync(`tar -xzf "${archivePath}" --strip-components=1 -C "${TMP_DIR}/extracted" "*/${REMOTE_DOCS_PATH}"`, { stdio: "pipe" });
+  execSync(`tar -xzf "${archivePath}" --wildcards --strip-components=1 -C "${TMP_DIR}/extracted" "*/${REMOTE_DOCS_PATH}"`, { stdio: "pipe" });
 
   // Replace local docs/
   fs.rmSync(DOCS_DIR, { recursive: true, force: true });
