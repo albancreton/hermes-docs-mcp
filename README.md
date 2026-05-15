@@ -76,6 +76,27 @@ Replace `<path-to-hermes-doc>` with the absolute path to this repo.
 
 That's it — the MCP server auto-boots on first connection: if the model, docs, or database are missing, it downloads and builds them automatically.
 
+### Environment variables
+
+| Variable | Values | Default | Description |
+|---|---|---|---|
+| `HERMES_DOCS_MODE` | `cpu`, `gpu`, `auto` | `auto` | Controls GPU offloading for embeddings. `cpu` forces CPU-only (`gpuLayers=0`), `gpu` pushes all layers to GPU (`gpuLayers=max`), `auto` lets the runtime decide. |
+
+```json
+{
+  "mcpServers": {
+    "hermes-docs": {
+      "command": "pnpm",
+      "args": ["mcp"],
+      "cwd": "<path-to-hermes-doc>",
+      "env": {
+        "HERMES_DOCS_MODE": "cpu"
+      }
+    }
+  }
+}
+```
+
 ## CLI tools
 
 Besides the MCP server, standalone CLI tools are available (from source):

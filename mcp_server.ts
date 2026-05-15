@@ -7,7 +7,7 @@ import type { Database as DatabaseType } from "better-sqlite3";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { ensureModel, createEmbeddingState, MODEL_PATH, cosineSimilarity } from "./rag_model.js";
+import { ensureModel, createEmbeddingState, MODEL_PATH, cosineSimilarity, type EmbeddingMode } from "./rag_model.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -168,8 +168,15 @@ async function main(): Promise<void> {
     console.error("");
   }
 
+  // Read mode from environment (cpu | gpu | auto, defaults to auto)
+  const mode: EmbeddingMode = (process.env.HERMES_DOCS_MODE as EmbeddingMode) ?? "auto";
+  if (mode !== "cpu" && mode !== "gpu" && mode !== "auto") {
+    console.error(`Warning: Invalid MODE '${process.env.HERMES_DOCS_MODE}', defaulting to 'auto'`);
+  }
+  const resolvedMode: EmbeddingMode = ["cpu", "gpu", "auto"].includes(mode) ? mode : "auto";
+
   // Load model into memory (needed for both DB build and queries)
-  const embedder = await createEmbeddingState(MODEL_PATH);
+  const embedder = await createEmbeddingState(MODEL_PATH, resolvedMode);
 
   try {
     // Step 3: Build DB if missing

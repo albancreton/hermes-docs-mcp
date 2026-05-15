@@ -72,16 +72,30 @@ function formatBytes(bytes: number): string {
 }
 
 // ── Embedding context ──────────────────────────────────────────────────────
+export type EmbeddingMode = "cpu" | "gpu" | "auto";
+
 export interface EmbeddingState {
   getEmbedding(text: string): Promise<number[]>;
   dispose(): Promise<void>;
 }
 
-export async function createEmbeddingState(modelPath: string): Promise<EmbeddingState> {
+function getGpuLayers(mode: EmbeddingMode): number | "auto" | "max" {
+  switch (mode) {
+    case "cpu":
+      return 0;
+    case "gpu":
+      return "max";
+    case "auto":
+      return "auto";
+  }
+}
+
+export async function createEmbeddingState(modelPath: string, mode: EmbeddingMode = "auto"): Promise<EmbeddingState> {
   const llama = await getLlama();
+  const gpuLayers = getGpuLayers(mode);
   const model: LlamaModel = await llama.loadModel({
     modelPath,
-    gpuLayers: "auto",
+    gpuLayers,
     onLoadProgress: (pct: number) => {
       process.stderr.write(`\r  Loading model ${(pct * 100).toFixed(0)}%`);
     },

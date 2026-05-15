@@ -2,7 +2,7 @@ import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import Database from "better-sqlite3";
-import { ensureModel, createEmbeddingState, type EmbeddingState } from "./rag_model.js";
+import { ensureModel, createEmbeddingState, type EmbeddingState, type EmbeddingMode } from "./rag_model.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -49,7 +49,9 @@ async function buildDb(): Promise<void> {
 
   // Ensure model is available
   const modelPath = await ensureModel();
-  const embedder = await createEmbeddingState(modelPath);
+  const mode: EmbeddingMode = (process.env.HERMES_DOCS_MODE as EmbeddingMode) ?? "auto";
+  const resolvedMode: EmbeddingMode = ["cpu", "gpu", "auto"].includes(mode) ? mode : "auto";
+  const embedder = await createEmbeddingState(modelPath, resolvedMode);
 
   try {
     // Open / recreate database

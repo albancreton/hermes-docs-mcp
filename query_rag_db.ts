@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import Database from "better-sqlite3";
 import type { Database as DatabaseType } from "better-sqlite3";
-import { ensureModel, createEmbeddingState, MODEL_PATH, cosineSimilarity } from "./rag_model.js";
+import { ensureModel, createEmbeddingState, MODEL_PATH, cosineSimilarity, type EmbeddingMode } from "./rag_model.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -19,7 +19,9 @@ interface Chunk {
 }
 
 async function runQuery(queryText: string, topK: number, db: DatabaseType): Promise<void> {
-  const embedder = await createEmbeddingState(MODEL_PATH);
+  const mode: EmbeddingMode = (process.env.HERMES_DOCS_MODE as EmbeddingMode) ?? "auto";
+  const resolvedMode: EmbeddingMode = ["cpu", "gpu", "auto"].includes(mode) ? mode : "auto";
+  const embedder = await createEmbeddingState(MODEL_PATH, resolvedMode);
 
   try {
     const queryEmbedding = await embedder.getEmbedding(queryText);
